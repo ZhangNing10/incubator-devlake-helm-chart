@@ -63,11 +63,13 @@ jobs:
           helm install mysql bitnami/mysql --set auth.rootPassword=admin --set auth.database=lake --set auth.username=merico --set auth.password=merico
           # external mysql at service: mysql
           helm dep build charts/devlake
-          helm install --debug --wait --timeout 300s deploy-test charts/devlake \
+          helm install  deploy-test charts/devlake \
             --set service.uiPort=30000 \
             --set mysql.useExternal=true \
             --set mysql.externalServer=mysql \
             --set lake.encryptionSecret.secret=$(openssl rand -base64 2000 | tr -dc 'A-Z' | fold -w 128 | head -n 1)
+          kubectl get pods -o wide
+          sleep 60s
           kubectl get pods -o wide
           kubectl get services -o wide
 
